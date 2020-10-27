@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { dbService } from 'fBase';
+import Nweet from 'components/Nweet';
 
 const Home = ({ userObj }) => {
   const [nweet, setNweet] = useState('');
@@ -20,7 +21,7 @@ const Home = ({ userObj }) => {
     event.preventDefault();
     // Create document
     await dbService.collection('nweets').add({
-      nweet,
+      text: nweet,
       createdAt: Date.now(),
       creatorId: userObj.uid,
     });
@@ -39,8 +40,10 @@ const Home = ({ userObj }) => {
         <input value={nweet} onChange={onChange} type="text" placeholder="what's on your mind?" maxLength={120} />
         <input type="submit" value="Nweet" />
       </form>
-      <div key={nweet.id}>
-        {nweets.map(nweet => <div><h4>{nweet.nweet}</h4></div>)}
+      <div>
+        {nweets.map((nweet) => (
+          <Nweet key={nweet.id} nweetObj={nweet} isOwner={nweet.creatorId === userObj.uid} />
+        ))}
       </div>
     </div>
   );
